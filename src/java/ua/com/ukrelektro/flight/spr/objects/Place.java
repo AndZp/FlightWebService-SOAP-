@@ -3,8 +3,8 @@ package ua.com.ukrelektro.flight.spr.objects;
 public class Place {
 
     private long id;
-    private char row;
-    private int seat;    
+    private char seatLetter;
+    private int seatNumber;    
     private FlightClass flightClass;
 
     public long getId() {
@@ -23,19 +23,19 @@ public class Place {
         this.flightClass = flightClass;
     }
 
-    public char getRow() {
-        return row;
+    public char getSeatLetter() {
+        return seatLetter;
     }
 
-    public void setRow(char row) {
-        this.row = row;
+    public void setSeatLetter(char seatLetter) {
+        this.seatLetter = seatLetter;
     }
 
-    public int getSeat() {
-        return seat;
+    public int getSeatNumber() {
+        return seatNumber;
     }
 
-    public void setSeat(int seat) {
-        this.seat = seat;
+    public void setSeatNumber(int seatNumber) {
+        this.seatNumber = seatNumber;
     }
 }
