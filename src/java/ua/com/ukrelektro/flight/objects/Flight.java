@@ -9,6 +9,7 @@ import ua.com.ukrelektro.flight.spr.objects.City;
 public class Flight {
 
     private String duration;// only in Java (this field is not present in the DB)
+    private boolean existFreePlaces;
     
     private long id;
     private String code;
@@ -80,5 +81,13 @@ public class Flight {
 
     public void setDuration(String duration) {
         this.duration = duration;
+    }
+    
+    public boolean isExistFreePlaces() {
+        return existFreePlaces;
+    }
+
+    public void setExistFreePlaces(boolean existFreePlaces) {
+        this.existFreePlaces = existFreePlaces;
     }
 }

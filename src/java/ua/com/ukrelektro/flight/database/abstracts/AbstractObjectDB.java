@@ -107,4 +107,12 @@ public abstract class AbstractObjectDB<T> implements ObjectDB<T> {
         c.set(Calendar.SECOND, 0);
         c.set(Calendar.MILLISECOND, 0);
     }
+    
+    protected boolean getBooleanFromInt(int number) {
+        if (number > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

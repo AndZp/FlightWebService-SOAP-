@@ -59,43 +59,44 @@ public class TestSearch extends HttpServlet {
             
            
             
-            Flight flight = FlightDB.getInstance().executeObject(FlightDB.getInstance().getObjectByID(3));
-
-            Place place = PlaceDB.getInstance().executeObject(PlaceDB.getInstance().getObjectByID(2));
-
-            Passenger passenger = PassengerDB.getInstance().executeObject(PassengerDB.getInstance().getObjectByID(1));
-
-            long dateLong = 1453800100000L;  // 26 JAN 2016 г. 9:21:40 GMT
+//            Flight flight = FlightDB.getInstance().executeObject(FlightDB.getInstance().getObjectByID(3));
+//
+//            Place place = PlaceDB.getInstance().executeObject(PlaceDB.getInstance().getObjectByID(2));
+//
+//            Passenger passenger = PassengerDB.getInstance().executeObject(PassengerDB.getInstance().getObjectByID(1));
+//
+//            long dateLong = 1453800100000L;  // 26 JAN 2016 г. 9:21:40 GMT
+//            
+//            Calendar date = Calendar.getInstance();
+//            date.setTimeInMillis(dateLong);
+//
+//            Reservation reserv = new Reservation();
+//            reserv.setAddInfo("Without dinner");
+//            reserv.setCode(UUID.randomUUID().toString());
+//            reserv.setPassenger(passenger);
+//            reserv.setReserveDateTime(date);
+//            reserv.setPlace(place);
+//            reserv.setFlight(flight);
+//
+//           //ReservationDB.getInstance().insert(ReservationDB.getInstance().getInsertStmt(reserv));
+//
+//            reserv = ReservationDB.getInstance().executeObject(ReservationDB.getInstance().getStmtByCode("d7026ba3-9102-439c-bf5f-cfb715ee3d8e"));
+//            System.out.println(reserv.getFlight().getAircraft().getName());
+//
+//            Calendar c = Calendar.getInstance();
+//            c.setTimeInMillis(dateLong);
+//
+//            reserv = ReservationDB.getInstance().executeObject(ReservationDB.getInstance().getStmtByDateReserv(date));
+//            System.out.println(reserv.getFlight().getAircraft().getName());
+//
+//            reserv = ReservationDB.getInstance().executeObject(ReservationDB.getInstance().getStmtByDocumentNumber("336351226"));
+//            System.out.println(reserv.getFlight().getAircraft().getName());
+//
+//            reserv = ReservationDB.getInstance().executeObject(ReservationDB.getInstance().getStmtByFamilyName("Oliinyk"));
+//            System.out.println(reserv.getFlight().getAircraft().getName());
             
-            Calendar date = Calendar.getInstance();
-            date.setTimeInMillis(dateLong);
-
-            Reservation reserv = new Reservation();
-            reserv.setAddInfo("Without dinner");
-            reserv.setCode(UUID.randomUUID().toString());
-            reserv.setPassenger(passenger);
-            reserv.setReserveDateTime(date);
-            reserv.setPlace(place);
-            reserv.setFlight(flight);
-
-           //ReservationDB.getInstance().insert(ReservationDB.getInstance().getInsertStmt(reserv));
-
-            reserv = ReservationDB.getInstance().executeObject(ReservationDB.getInstance().getStmtByCode("d7026ba3-9102-439c-bf5f-cfb715ee3d8e"));
-            System.out.println(reserv.getFlight().getAircraft().getName());
-
-            Calendar c = Calendar.getInstance();
-            c.setTimeInMillis(dateLong);
-
-            reserv = ReservationDB.getInstance().executeObject(ReservationDB.getInstance().getStmtByDateReserv(date));
-            System.out.println(reserv.getFlight().getAircraft().getName());
-
-            reserv = ReservationDB.getInstance().executeObject(ReservationDB.getInstance().getStmtByDocumentNumber("336351226"));
-            System.out.println(reserv.getFlight().getAircraft().getName());
-
-            reserv = ReservationDB.getInstance().executeObject(ReservationDB.getInstance().getStmtByFamilyName("Oliinyk"));
-            System.out.println(reserv.getFlight().getAircraft().getName());
-            
-            
+             Reservation reserv = ReservationDB.getInstance().executeObject(ReservationDB.getInstance().getStmtByFamilyName("Cher"));
+             System.out.println(reserv.getFlight().getAircraft().getName());
         } finally {            
             out.close();
         }

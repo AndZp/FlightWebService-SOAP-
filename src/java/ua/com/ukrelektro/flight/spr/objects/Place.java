@@ -6,6 +6,7 @@ public class Place {
     private char seatLetter;
     private int seatNumber;    
     private FlightClass flightClass;
+    private boolean busy;
 
     public long getId() {
         return id;
@@ -37,5 +38,13 @@ public class Place {
 
     public void setSeatNumber(int seatNumber) {
         this.seatNumber = seatNumber;
+    }
+
+    public boolean isBusy() {
+        return busy;
+    }
+
+    public void setBusy(boolean busy) {
+        this.busy = busy;
     }
 }
