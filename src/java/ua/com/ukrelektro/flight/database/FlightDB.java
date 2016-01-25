@@ -4,18 +4,18 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import ua.com.ukrelektro.flight.database.abstracts.AbstractObjectDB;
 import ua.com.ukrelektro.flight.objects.Flight;
+import ua.com.ukrelektro.flight.spr.objects.Aircraft;
 import ua.com.ukrelektro.flight.spr.objects.City;
 import ua.com.ukrelektro.flight.utils.GMTCalendar;
 
-public class FlightDB {
-    public static final int INTERVAL = 1;
+public class FlightDB extends AbstractObjectDB<Flight> {
+    public final static String TABLE_FLIGHT = "flight";
 
     private FlightDB() {
+        super(TABLE_FLIGHT);
     }
     private static FlightDB instance;
 
@@ -26,93 +26,15 @@ public class FlightDB {
 
         return instance;
     }
+    private static final String MIN = " мин.";
+    private static final String HOUR = " ч.  ";
+    private static final String DAY = " д.  ";
 
-    public Flight getFlight(long id) {
-        try {
-            return getFlight(getFlightStmt(id));
-        } catch (Exception ex) {
-            Logger.getLogger(FlightDB.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            AviaDB.getInstance().closeConnection();
-        }
-        return null;
-    }
-
-    
-    public ArrayList<Flight> getAllFlights() {
-        try {
-            return getFlights(getAllFlightsStmt());
-        } catch (Exception ex) {
-            Logger.getLogger(FlightDB.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            AviaDB.getInstance().closeConnection();
-        }
-        return null;
-    }
-    
-    public ArrayList<Flight> getFlights(long dateTime, City cityFrom, City cityTo) {
-        try {
-            Calendar c = GMTCalendar.getInstance();
-            c.setTimeInMillis(dateTime);
-            return getFlights(getFlightsStmt(c, cityFrom, cityTo));
-        } catch (Exception ex) {
-            Logger.getLogger(FlightDB.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            AviaDB.getInstance().closeConnection();
-        }
-        return null;
-    }
-    
-    private ArrayList<Flight> getFlights(PreparedStatement stmt) throws SQLException {
-
-        ArrayList<Flight> list = new ArrayList<>();
-        ResultSet rs = null;
-
-        try {
-            rs = stmt.executeQuery();
-
-            while(rs.next()){                
-                list.add(fillFlight(rs));            
-            }
- 
-        } finally {
-            if (rs!=null) rs.close();
-            if (stmt!=null) stmt.close();            
-        }
-
-        return list;
-    }
-    
-    private Flight getFlight(PreparedStatement stmt) throws SQLException {
-
-        Flight flight = null;
-        ResultSet rs = null;
-
-        try {
-            rs = stmt.executeQuery();
-
-            rs.next();
-            if (rs.isFirst()) {
-                flight = fillFlight(rs);
-            }
- 
-        } finally {
-            if (rs!=null) rs.close();
-            if (stmt!=null) stmt.close();            
-        }
-
-        return flight;
-    }
-    
-    
-    private static final String MIN = " min.";
-    private static final String HOUR = " h.  ";
-    private static final String DAY = " d.  ";
-    
-    private Flight fillFlight(ResultSet rs) throws SQLException {
+    @Override
+    public Flight fillObject(ResultSet rs) throws SQLException {
         Calendar dateDepart = GMTCalendar.getInstance();
         Calendar dateCome = GMTCalendar.getInstance();
-        
+
         dateDepart.setTimeInMillis(rs.getLong("date_depart"));
         dateCome.setTimeInMillis(rs.getLong("date_come"));
 
@@ -121,16 +43,22 @@ public class FlightDB {
         flight.setCode(rs.getString("code"));
         flight.setDateDepart(dateDepart);
         flight.setDateCome(dateCome);
-        flight.setAircraft(AircraftDB.getInstance().getAircraft(rs.getLong("aircraft_id")));
-        flight.setCityFrom(CityDB.getInstance().getCity(rs.getLong("city_from_id")));
-        flight.setCityTo(CityDB.getInstance().getCity(rs.getLong("city_to_id")));
-        
+
+        Aircraft aircraft = AircraftDB.getInstance().executeObject(AircraftDB.getInstance().getObjectByID(rs.getLong("aircraft_id")));
+        flight.setAircraft(aircraft);
+
+        City city_from = CityDB.getInstance().executeObject(CityDB.getInstance().getObjectByID(rs.getLong("city_from_id")));
+        flight.setCityFrom(city_from);
+
+        City city_to = CityDB.getInstance().executeObject(CityDB.getInstance().getObjectByID(rs.getLong("city_to_id")));
+        flight.setCityTo(city_to);
+
         StringBuilder sb = new StringBuilder();
-       
+
         int dayDiff = dateCome.get(Calendar.DAY_OF_YEAR) - dateDepart.get(Calendar.DAY_OF_YEAR);
         int hourDiff = dateCome.get(Calendar.HOUR_OF_DAY) - dateDepart.get(Calendar.HOUR_OF_DAY);
         int minDiff = dateCome.get(Calendar.MINUTE) - dateDepart.get(Calendar.MINUTE);
-     
+
         if (dayDiff > 0) {
             sb.append(dayDiff).append(DAY);
         }
@@ -148,40 +76,44 @@ public class FlightDB {
         return flight;
     }
 
-    private PreparedStatement getFlightStmt(long id) throws SQLException {
+    public PreparedStatement getStmt(Calendar dateTime, City cityFrom, City cityTo) throws SQLException {
         Connection conn = AviaDB.getInstance().getConnection();
-        PreparedStatement stmt = conn.prepareStatement("select * from flight where id=?");
-        stmt.setLong(1, id);
-        return stmt;
-    }
-    
-      private PreparedStatement getAllFlightsStmt() throws SQLException {
-        Connection conn = AviaDB.getInstance().getConnection();
-        PreparedStatement stmt = conn.prepareStatement("select * from flight");
-        return stmt;
-    }
-      
-    private PreparedStatement getFlightsStmt(Calendar dateTime, City cityFrom, City cityTo) throws SQLException {
-        Connection conn = AviaDB.getInstance().getConnection();
-        PreparedStatement stmt = conn.prepareStatement("select * from flight where date_depart>=? and  date_depart<? and city_from_id=? and city_to_id=?");
+        PreparedStatement stmt = conn.prepareStatement("select * from " + TABLE_FLIGHT + " where date_depart>=? and  date_depart<? and city_from_id=? and city_to_id=?");
 
-//        GMTCalendar.print(dateTime);
-    
-        // leaving only the date to search flights for 24 hours
+
+        // оставить только дату, чтобы искать рейсы за все 24 часа
         dateTime.set(Calendar.HOUR_OF_DAY, 0);
         dateTime.set(Calendar.MINUTE, 0);
         dateTime.set(Calendar.SECOND, 0);
         dateTime.set(Calendar.MILLISECOND, 0);
-        
 
-        // Interval - 24 hours
-        Calendar dateTimeInterval = (Calendar)(dateTime.clone());
-        dateTimeInterval.add(Calendar.DATE, INTERVAL);         
-        
+
+        // в каком интервали искать (по-умолчанию - в пределах суток)
+        Calendar dateTimeInterval = (Calendar) (dateTime.clone());
+        dateTimeInterval.add(Calendar.DATE, INTERVAL);
+
+
         stmt.setLong(1, dateTime.getTimeInMillis());
         stmt.setLong(2, dateTimeInterval.getTimeInMillis());
         stmt.setLong(3, cityFrom.getId());
         stmt.setLong(4, cityTo.getId());
         return stmt;
     }
+
+    public PreparedStatement getStmtByDateDepart(Calendar dateDepart) throws SQLException {
+        Connection conn = AviaDB.getInstance().getConnection();
+        PreparedStatement stmt = conn.prepareStatement("select * from " + TABLE_FLIGHT + " where date_from>=? and  date_depart<?");
+
+
+        // clear time-part, stay only date
+        clearTime(dateDepart);
+
+        // Searching interval (default - 1 day)
+        Calendar dateTimeInterval = (Calendar) (dateDepart.clone());
+        dateTimeInterval.add(Calendar.DATE, INTERVAL);
+
+        stmt.setLong(1, dateDepart.getTimeInMillis());
+        stmt.setLong(2, dateTimeInterval.getTimeInMillis());
+        return stmt;
+    }      
 }

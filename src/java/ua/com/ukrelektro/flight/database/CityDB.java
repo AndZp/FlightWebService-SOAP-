@@ -4,14 +4,16 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import ua.com.ukrelektro.flight.database.abstracts.AbstractObjectDB;
 import ua.com.ukrelektro.flight.spr.objects.City;
+import ua.com.ukrelektro.flight.spr.objects.Country;
 
+public class CityDB extends AbstractObjectDB<City> {
 
-public class CityDB {
+    public final static String TABLE_SPR_CITY = "spr_city";
 
     private CityDB() {
+        super(TABLE_SPR_CITY);
     }
     private static CityDB instance;
 
@@ -19,68 +21,27 @@ public class CityDB {
         if (instance == null) {
             instance = new CityDB();
         }
-
         return instance;
     }
 
-    public City getCity(long id) {
-        try {
-            return getCity(getCityStmt(id));
-        } catch (SQLException ex) {
-            Logger.getLogger(CityDB.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            AviaDB.getInstance().closeConnection();
-        }
-        return null;
-    }
-
-    public City getCity(String name) {
-        try {
-            return getCity(getCityStmt(name));
-        } catch (SQLException ex) {
-            Logger.getLogger(CityDB.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            AviaDB.getInstance().closeConnection();
-        }
-        return null;
-    }
-
-    private City getCity(PreparedStatement stmt) {
-
-        City city = null;
-        ResultSet rs = null;
-
-        try {
-            rs = stmt.executeQuery();
-
-            rs.next();
-            if (rs.isFirst()) {
-                city = new City();
-                city.setId(rs.getLong("id"));
-                city.setPostCode(rs.getString("code"));
-                city.setCountry(CountryDB.getCountry(rs.getLong("country_id")));
-                city.setDesc(rs.getString("desc"));
-                city.setName(rs.getString("name"));
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return city;
-    }
-
-    private PreparedStatement getCityStmt(String name) throws SQLException {
+    public PreparedStatement getStmtByName(String name) throws SQLException {
         Connection conn = AviaDB.getInstance().getConnection();
-        PreparedStatement stmt = conn.prepareStatement("select * from spr_city where name=?");
+        PreparedStatement stmt = conn.prepareStatement("select * from " + TABLE_SPR_CITY + " where name=?");
         stmt.setString(1, name);
         return stmt;
     }
 
-    private PreparedStatement getCityStmt(long id) throws SQLException {
-        Connection conn = AviaDB.getInstance().getConnection();
-        PreparedStatement stmt = conn.prepareStatement("select * from spr_city where id=?");
-        stmt.setLong(1, id);
-        return stmt;
-    }
+    @Override
+    public City fillObject(ResultSet rs) throws SQLException {
+        City city = new City();
+        city.setId(rs.getLong("id"));
+        city.setCode(rs.getString("code"));
+
+        Country country = CountryDB.getInstance().executeObject(CountryDB.getInstance().getObjectByID(rs.getLong("country_id")));
+        
+        city.setCountry(country);
+        city.setDesc(rs.getString("desc"));
+        city.setName(rs.getString("name"));
+        return city;
+    }   
 }

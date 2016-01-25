@@ -1,19 +1,21 @@
 package ua.com.ukrelektro.flight.database;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
+import ua.com.ukrelektro.flight.database.abstracts.AbstractObjectDB;
 import ua.com.ukrelektro.flight.spr.objects.Aircraft;
+import ua.com.ukrelektro.flight.spr.objects.Company;
+import ua.com.ukrelektro.flight.spr.objects.Place;
 
+public class AircraftDB extends AbstractObjectDB<Aircraft> {
 
-
-public class AircraftDB {
+    public final static String TABLE_SPR_AIRCRAFT = "spr_aircraft";
     
-     private AircraftDB() {
+    private AircraftDB() {
+        super(TABLE_SPR_AIRCRAFT);
     }
+    
     private static AircraftDB instance;
 
     public static AircraftDB getInstance() {
@@ -23,53 +25,22 @@ public class AircraftDB {
 
         return instance;
     }
-    
 
-    public Aircraft getAircraft(long id) {
-        try {
-            return getAircraft(getAircraftStmt(id));
-        } catch (SQLException ex) {
-            Logger.getLogger(AircraftDB.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            AviaDB.getInstance().closeConnection();
-        }
-        return null;
-    }
-
- 
-    private Aircraft getAircraft(PreparedStatement stmt) throws SQLException {
-
-        Aircraft aircraft = null;
-        ResultSet rs = null;
-
-        try {
-            rs = stmt.executeQuery();
-
-            rs.next();
-            if (rs.isFirst()) {
-                aircraft = new Aircraft();
-                aircraft.setId(rs.getLong("id"));
-                aircraft.setDesc(rs.getString("desc"));
-                aircraft.setName(rs.getString("name"));
-                aircraft.setPlaceList(PlaceDB.getInstance().getPlacesByAircraft(rs.getLong("id")));
-                aircraft.setCompany(CompanyDB.getInstance().getCompany(rs.getInt("company_id")));
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            rs.close();
-            stmt.close();
-        }
-
+    @Override
+    public Aircraft fillObject(ResultSet rs) throws SQLException {
+        Aircraft aircraft = new Aircraft();
+        aircraft.setId(rs.getLong("id"));
+        aircraft.setDesc(rs.getString("desc"));
+        aircraft.setName(rs.getString("name"));
+        
+        ArrayList<Place> placeList = PlaceDB.getInstance().executeList(PlaceDB.getInstance().getStmtByAircraftID(rs.getLong("id")));
+        aircraft.setPlaceList(placeList);
+        
+        Company comp = CompanyDB.getInstance().executeObject(CompanyDB.getInstance().getObjectByID(rs.getInt("company_id")));
+        
+        aircraft.setCompany(comp);
         return aircraft;
     }
 
-    private PreparedStatement getAircraftStmt(long id) throws SQLException {
-        Connection conn = AviaDB.getInstance().getConnection();
-        PreparedStatement stmt = conn.prepareStatement("select * from spr_aircraft where id=?");
-        stmt.setLong(1, id);
-        return stmt;
-    }
-
+    
 }

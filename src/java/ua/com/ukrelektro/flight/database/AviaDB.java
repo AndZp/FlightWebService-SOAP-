@@ -13,6 +13,7 @@ public class AviaDB {
     private static Connection conn;
     private static InitialContext ic;
     private static DataSource ds;
+    public static final String JDBC_JNDI = "java:comp/env/jdbc/avia";
 
     private AviaDB() {
     }
@@ -33,7 +34,7 @@ public class AviaDB {
             if (conn == null || conn.isClosed()) {
 
                 ic = new InitialContext();
-                ds = (DataSource) ic.lookup("java:comp/env/jdbc/avia");
+                ds = (DataSource) ic.lookup(JDBC_JNDI);
                 conn = ds.getConnection();
 
             }
@@ -52,8 +53,6 @@ public class AviaDB {
         if (conn != null) {
             try {
                 conn.close();
-
-
             } catch (SQLException ex) {
                 Logger.getLogger(AviaDB.class
                         .getName()).log(Level.SEVERE, null, ex);
