@@ -6,14 +6,14 @@ package ua.com.ukrelektro.flight.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import ua.com.ukrelektro.flight.database.CityDB;
-import ua.com.ukrelektro.flight.spr.objects.City;
-
+import ua.com.ukrelektro.flight.database.FlightDB;
+import ua.com.ukrelektro.flight.objects.Flight;
 /**
  *
  * @author Tim
@@ -76,8 +76,8 @@ public class TestSearch extends HttpServlet {
             
             
             
-            City c = CityDB.getInstance().getCity(2);
-            System.out.println(c.getName());
+            ArrayList<Flight> flightsList = FlightDB.getInstance().getAllFlights(); 
+            System.out.println(flightsList);
             
         } finally {            
             out.close();

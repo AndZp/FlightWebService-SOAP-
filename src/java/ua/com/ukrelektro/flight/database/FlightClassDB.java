@@ -55,6 +55,7 @@ public class FlightClassDB {
             e.printStackTrace();
         } finally {
             rs.close();
+            stmt.close();
         }
 
         return flightClass;

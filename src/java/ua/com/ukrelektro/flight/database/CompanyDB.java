@@ -57,6 +57,7 @@ public class CompanyDB {
             e.printStackTrace();
         } finally {
             rs.close();
+            stmt.close();
         }
 
         return company;
