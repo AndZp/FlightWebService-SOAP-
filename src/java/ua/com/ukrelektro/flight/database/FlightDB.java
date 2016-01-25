@@ -28,9 +28,9 @@ public class FlightDB extends AbstractObjectDB<Flight> {
 
         return instance;
     }
-    private static final String MIN = " мин.";
-    private static final String HOUR = " ч.  ";
-    private static final String DAY = " д.  ";
+    private static final String MIN = " min..";
+    private static final String HOUR = " h.  ";
+    private static final String DAY = " d.  ";
 
     @Override
     public Flight fillObject(ResultSet rs) throws SQLException {
@@ -52,7 +52,7 @@ public class FlightDB extends AbstractObjectDB<Flight> {
         ArrayList<Place> placeList = PlaceDB.getInstance().executeList(PlaceDB.getInstance().getPlaceStmtBusy(aircraft.getId(), flight.getId()));
         aircraft.setPlaceList(placeList);
         
-        // если есть хоть 1 свободное место
+        // if enabe one or more free places
         for (Place place : placeList) {
             if (!place.isBusy()){
                 flight.setExistFreePlaces(true);
@@ -95,14 +95,14 @@ public class FlightDB extends AbstractObjectDB<Flight> {
         PreparedStatement stmt = conn.prepareStatement("select * from " + TABLE_FLIGHT + " where date_depart>=? and  date_depart<? and city_from_id=? and city_to_id=?");
 
 
-        // оставить только дату, чтобы искать рейсы за все 24 часа
+        // only date, for a 24h search
         dateTime.set(Calendar.HOUR_OF_DAY, 0);
         dateTime.set(Calendar.MINUTE, 0);
         dateTime.set(Calendar.SECOND, 0);
         dateTime.set(Calendar.MILLISECOND, 0);
 
 
-        // в каком интервали искать (по-умолчанию - в пределах суток)
+        // Interval - default = 1 day
         Calendar dateTimeInterval = (Calendar) (dateTime.clone());
         dateTimeInterval.add(Calendar.DATE, INTERVAL);
 

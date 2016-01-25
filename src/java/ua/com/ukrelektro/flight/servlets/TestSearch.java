@@ -7,8 +7,7 @@ package ua.com.ukrelektro.flight.servlets;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.util.Calendar;
-import java.util.UUID;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -16,25 +15,22 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import ua.com.ukrelektro.flight.database.CityDB;
 import ua.com.ukrelektro.flight.database.FlightDB;
 import ua.com.ukrelektro.flight.database.PassengerDB;
 import ua.com.ukrelektro.flight.database.PlaceDB;
-import ua.com.ukrelektro.flight.database.ReservationDB;
+import ua.com.ukrelektro.flight.interfaces.impls.SearchImpl;
 import ua.com.ukrelektro.flight.objects.Flight;
 import ua.com.ukrelektro.flight.objects.Passenger;
-import ua.com.ukrelektro.flight.objects.Reservation;
+import ua.com.ukrelektro.flight.spr.objects.City;
 import ua.com.ukrelektro.flight.spr.objects.Place;
-/**
- *
- * @author Tim
- */
+
 @WebServlet(name = "TestSearch", urlPatterns = {"/TestSearch"})
 public class TestSearch extends HttpServlet {
 
     /**
-     * Processes requests for both HTTP
-     * <code>GET</code> and
-     * <code>POST</code> methods.
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
      *
      * @param request servlet request
      * @param response servlet response
@@ -56,9 +52,7 @@ public class TestSearch extends HttpServlet {
 //            out.println("<h1>Servlet TestSearch at " + request.getContextPath() + "</h1>");
 //            out.println("</body>");
 //            out.println("</html>");
-            
-           
-            
+
 //            Flight flight = FlightDB.getInstance().executeObject(FlightDB.getInstance().getObjectByID(3));
 //
 //            Place place = PlaceDB.getInstance().executeObject(PlaceDB.getInstance().getObjectByID(2));
@@ -94,18 +88,29 @@ public class TestSearch extends HttpServlet {
 //
 //            reserv = ReservationDB.getInstance().executeObject(ReservationDB.getInstance().getStmtByFamilyName("Oliinyk"));
 //            System.out.println(reserv.getFlight().getAircraft().getName());
-            
-             Reservation reserv = ReservationDB.getInstance().executeObject(ReservationDB.getInstance().getStmtByFamilyName("Cher"));
-             System.out.println(reserv.getFlight().getAircraft().getName());
-        } finally {            
+//             Reservation reserv = ReservationDB.getInstance().executeObject(ReservationDB.getInstance().getStmtByFamilyName("Cher"));
+//             System.out.println(reserv.getFlight().getAircraft().getName());
+            Flight flight = FlightDB.getInstance().executeObject(FlightDB.getInstance().getObjectByID(1));
+
+            Place place = PlaceDB.getInstance().executeObject(PlaceDB.getInstance().getObjectByID(2));
+
+            Passenger passenger = PassengerDB.getInstance().executeObject(PassengerDB.getInstance().getObjectByID(1));
+
+            City c1 = CityDB.getInstance().executeObject(CityDB.getInstance().getObjectByID(3));
+            City c2 = CityDB.getInstance().executeObject(CityDB.getInstance().getObjectByID(8));
+
+            SearchImpl search = new SearchImpl();
+            ArrayList<Flight> list = search.searchFlight(1453800100000L, c1, c2);
+
+            System.out.println(list);
+        } finally {
             out.close();
         }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
-     * Handles the HTTP
-     * <code>GET</code> method.
+     * Handles the HTTP <code>GET</code> method.
      *
      * @param request servlet request
      * @param response servlet response
@@ -123,8 +128,7 @@ public class TestSearch extends HttpServlet {
     }
 
     /**
-     * Handles the HTTP
-     * <code>POST</code> method.
+     * Handles the HTTP <code>POST</code> method.
      *
      * @param request servlet request
      * @param response servlet response

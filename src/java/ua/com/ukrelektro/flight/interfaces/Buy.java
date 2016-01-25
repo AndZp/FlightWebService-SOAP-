@@ -1,13 +1,11 @@
 package ua.com.ukrelektro.flight.interfaces;
 
 import ua.com.ukrelektro.flight.objects.Flight;
+import ua.com.ukrelektro.flight.objects.Passenger;
 import ua.com.ukrelektro.flight.spr.objects.Place;
-import ua.com.ukrelektro.flight.objects.Reservation;
-
-
 
 public interface Buy {
-    
-    Reservation buyTicket(Flight flight, Place place, String addInfo);
+
+    boolean buyTicket(Flight flight, Place place, Passenger passenger, String addInfo);
 
 }
