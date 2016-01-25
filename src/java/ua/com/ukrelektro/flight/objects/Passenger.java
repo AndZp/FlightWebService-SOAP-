@@ -1,13 +1,23 @@
 package ua.com.ukrelektro.flight.objects;
 
+
 public class Passenger {
 
+    private long id;
     private String givenName;
     private String middleName;
     private String familyName;
     private String documentNumber;
     private String email;
     private String phone;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getGivenName() {
         return givenName;

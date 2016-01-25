@@ -4,9 +4,11 @@
  */
 package ua.com.ukrelektro.flight.servlets;
 
+import java.util.UUID;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,8 +16,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import ua.com.ukrelektro.flight.database.CityDB;
 import ua.com.ukrelektro.flight.database.FlightDB;
+import ua.com.ukrelektro.flight.database.PassengerDB;
+import ua.com.ukrelektro.flight.database.PlaceDB;
+import ua.com.ukrelektro.flight.database.ReservationDB;
 import ua.com.ukrelektro.flight.objects.Flight;
+import ua.com.ukrelektro.flight.objects.Passenger;
+import ua.com.ukrelektro.flight.objects.Reservation;
 import ua.com.ukrelektro.flight.spr.objects.City;
+import ua.com.ukrelektro.flight.spr.objects.Place;
 /**
  *
  * @author Tim
@@ -70,6 +78,27 @@ public class TestSearch extends HttpServlet {
             for (Flight flight : list) {
                 System.out.println(flight.getAircraft().getName());
             }
+            
+            
+            Flight flight = list.get(0);
+            
+            Place place = PlaceDB.getInstance().getPlace(2);
+            
+            Passenger passenger = PassengerDB.getInstance().getPassenger(1);
+            
+            Calendar dateFlight = Calendar.getInstance();
+            dateFlight.setTimeInMillis(date);
+            
+            Reservation reserv = new Reservation();
+            reserv.setAddInfo("Without dinner");
+            reserv.setCode(UUID.randomUUID().toString());
+            reserv.setPassenger(passenger);
+            reserv.setReserveDateTime(dateFlight);
+            reserv.setPlace(place);
+            reserv.setFlight(flight);
+            
+            ReservationDB.getInstance().insertReservation(reserv);
+            
             
         } finally {            
             out.close();
