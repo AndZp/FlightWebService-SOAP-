@@ -8,6 +8,8 @@ import ua.com.ukrelektro.flight.spr.objects.City;
 
 public class Flight {
 
+    private String duration;// only in Java (this field is not present in the DB)
+    
     private long id;
     private String code;
     private Calendar dateDepart;
@@ -70,5 +72,13 @@ public class Flight {
 
     public void setCityTo(City cityTo) {
         this.cityTo = cityTo;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
     }
 }

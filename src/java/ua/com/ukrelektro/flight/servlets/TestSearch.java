@@ -12,8 +12,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import ua.com.ukrelektro.flight.database.CityDB;
 import ua.com.ukrelektro.flight.database.FlightDB;
 import ua.com.ukrelektro.flight.objects.Flight;
+import ua.com.ukrelektro.flight.spr.objects.City;
 /**
  *
  * @author Tim
@@ -47,6 +49,7 @@ public class TestSearch extends HttpServlet {
 //            out.println("</body>");
 //            out.println("</html>");
             
+                 
             
             
             
@@ -56,28 +59,17 @@ public class TestSearch extends HttpServlet {
             
             
             
+           //	26 JAN 2016 г. 17:55:00 GMT  = 1453830900000
+            City c8 = CityDB.getInstance().getCity(8);//Tel Aviv
+            City c3 = CityDB.getInstance().getCity(3);// Kiev
             
+            long date = 1453800100000L;  // 26 JAN 2016 г. 9:21:40 GMT
             
+            ArrayList<Flight> list = FlightDB.getInstance().getFlights(date, c3, c8);
             
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            ArrayList<Flight> flightsList = FlightDB.getInstance().getAllFlights(); 
-            System.out.println(flightsList);
+            for (Flight flight : list) {
+                System.out.println(flight.getAircraft().getName());
+            }
             
         } finally {            
             out.close();
