@@ -19,22 +19,33 @@ public abstract class AbstractObjectDB<T> implements ObjectDB<T> {
     }
 
     @Override
-    public boolean insert(PreparedStatement stmt) throws SQLException {
+    public int insert(PreparedStatement stmt) throws SQLException {
+        int result = -1;
+        ResultSet rs = null;
 
         try {
-            int result = stmt.executeUpdate();
+            result = stmt.executeUpdate();
 
-            if (result > 0) {
-                return true;
+            rs = stmt.getGeneratedKeys();
+
+            rs.next();
+            if (rs.isFirst()) {
+                result = rs.getInt(1);// вернуть id вставленной записи
             }
+
+            
 
         } finally {
             if (stmt != null) {
                 stmt.close();
             }
+
+            if (rs != null) {
+                rs.close();
+            }
         }
 
-        return false;
+        return result;
     }
 
     @Override

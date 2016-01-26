@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public interface ObjectDB<T> {
     
-    boolean insert(PreparedStatement stmt)  throws SQLException;
+    int insert(PreparedStatement stmt)  throws SQLException;
     
     T executeObject(PreparedStatement stmt) throws SQLException;
     

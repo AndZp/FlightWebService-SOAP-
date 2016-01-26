@@ -1,10 +1,12 @@
 package ua.com.ukrelektro.flight.interfaces.impls;
 
+import com.sun.xml.bind.v2.TODO;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import ua.com.ukrelektro.flight.database.PassengerDB;
 import ua.com.ukrelektro.flight.database.ReservationDB;
 import ua.com.ukrelektro.flight.interfaces.Buy;
 import ua.com.ukrelektro.flight.objects.Flight;
@@ -14,8 +16,9 @@ import ua.com.ukrelektro.flight.spr.objects.Place;
 import ua.com.ukrelektro.flight.utils.GMTCalendar;
 
 public class BuyImpl implements Buy {
-    
+
     private ReservationDB reservDB = ReservationDB.getInstance();
+    private PassengerDB passengerDB = PassengerDB.getInstance();
 
     @Override
     public boolean buyTicket(Flight flight, Place place, Passenger passenger, String addInfo) {
@@ -32,6 +35,10 @@ public class BuyImpl implements Buy {
 
             reserv.setPlace(place);
             reserv.setFlight(flight);
+
+            //TODO: one transactional
+            int id = passengerDB.insert(passengerDB.getInsertStmt(passenger));
+            passenger.setId(id);
 
             reservDB.insert(reservDB.getInsertStmt(reserv));
 

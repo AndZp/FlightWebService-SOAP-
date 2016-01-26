@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.jws.WebService;
 import ua.com.ukrelektro.flight.database.CityDB;
 import ua.com.ukrelektro.flight.database.FlightDB;
 import ua.com.ukrelektro.flight.interfaces.Search;
@@ -13,7 +12,7 @@ import ua.com.ukrelektro.flight.objects.Flight;
 import ua.com.ukrelektro.flight.spr.objects.City;
 import ua.com.ukrelektro.flight.utils.GMTCalendar;
 
-@WebService(serviceName = "FlightService")
+
 public class SearchImpl implements Search {
 
     private FlightDB flightDB = FlightDB.getInstance();
