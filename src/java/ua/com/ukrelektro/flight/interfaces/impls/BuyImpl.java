@@ -1,6 +1,5 @@
 package ua.com.ukrelektro.flight.interfaces.impls;
 
-import com.sun.xml.bind.v2.TODO;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.UUID;

@@ -16,7 +16,6 @@ import ua.com.ukrelektro.flight.spr.objects.City;
 import ua.com.ukrelektro.flight.spr.objects.Place;
 import ua.com.ukrelektro.flight.utils.GMTCalendar;
 
-
 @WebService(serviceName = "SearchWS")
 //@BindingType(value = SOAPBinding.SOAP12HTTP_MTOM_BINDING)
 //@HandlerChain(file = "SearchWS_handler.xml")
