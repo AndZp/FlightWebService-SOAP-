@@ -16,9 +16,8 @@ import ua.com.ukrelektro.flight.spr.objects.City;
 import ua.com.ukrelektro.flight.spr.objects.Place;
 import ua.com.ukrelektro.flight.utils.GMTCalendar;
 
+
 @WebService(serviceName = "SearchWS")
-//@BindingType(value = SOAPBinding.SOAP12HTTP_MTOM_BINDING)
-//@HandlerChain(file = "SearchWS_handler.xml")
 public class SearchWS implements Search, Buy, Check {
 
     private SearchImpl searchImpl = new SearchImpl();
@@ -56,5 +55,10 @@ public class SearchWS implements Search, Buy, Check {
     @Override
     public Reservation checkReservationByCode(String code) {
         return checkImpl.checkReservationByCode(code);
+    }
+
+    @Override
+    public Reservation checkReservationByFamilyName(String familyName) {
+        return checkImpl.checkReservationByFamilyName(familyName);
     }
 }

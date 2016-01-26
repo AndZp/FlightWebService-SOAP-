@@ -52,14 +52,16 @@ public class FlightDB extends AbstractObjectDB<Flight> {
         ArrayList<Place> placeList = PlaceDB.getInstance().executeList(PlaceDB.getInstance().getPlaceStmtBusy(aircraft.getId(), flight.getId()));
         aircraft.setPlaceList(placeList);
         
-        // if enabe one or more free places
-        for (Place place : placeList) {
+        ArrayList<Place> freePlaceList = new ArrayList<>();
+        
+          for (Place place : placeList) {
             if (!place.isBusy()){
                 flight.setExistFreePlaces(true);
-                break;
+                freePlaceList.add(place);
             }
-        }
-       
+        }         
+          
+        aircraft.setFreePlaceList(freePlaceList);       
 
         City city_from = CityDB.getInstance().executeObject(CityDB.getInstance().getObjectByID(rs.getLong("city_from_id")));
         flight.setCityFrom(city_from);
@@ -95,14 +97,14 @@ public class FlightDB extends AbstractObjectDB<Flight> {
         PreparedStatement stmt = conn.prepareStatement("select * from " + TABLE_FLIGHT + " where date_depart>=? and  date_depart<? and city_from_id=? and city_to_id=?");
 
 
-        // only date, for a 24h search
+        // оставить только дату, чтобы искать рейсы за все 24 часа
         dateTime.set(Calendar.HOUR_OF_DAY, 0);
         dateTime.set(Calendar.MINUTE, 0);
         dateTime.set(Calendar.SECOND, 0);
         dateTime.set(Calendar.MILLISECOND, 0);
 
 
-        // Interval - default = 1 day
+        // в каком интервали искать (по-умолчанию - в пределах суток)
         Calendar dateTimeInterval = (Calendar) (dateTime.clone());
         dateTimeInterval.add(Calendar.DATE, INTERVAL);
 
@@ -119,15 +121,17 @@ public class FlightDB extends AbstractObjectDB<Flight> {
         PreparedStatement stmt = conn.prepareStatement("select * from " + TABLE_FLIGHT + " where date_from>=? and  date_depart<?");
 
 
-        // clear time-part, stay only date
+        // оставить только дату, чтобы искать рейсы за все 24 часа
         clearTime(dateDepart);
 
-        // Searching interval (default - 1 day)
+        // в каком интервали искать (по-умолчанию - в пределах суток)
         Calendar dateTimeInterval = (Calendar) (dateDepart.clone());
         dateTimeInterval.add(Calendar.DATE, INTERVAL);
 
         stmt.setLong(1, dateDepart.getTimeInMillis());
         stmt.setLong(2, dateTimeInterval.getTimeInMillis());
         return stmt;
-    }      
+    } 
+    
 }
+

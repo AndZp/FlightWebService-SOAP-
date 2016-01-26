@@ -10,6 +10,6 @@ public interface Check {
 
    // Reservation checkReservationByDateReserv(long date);
 
-   // Reservation checkReservationByFamilyName(String familyName);
+   Reservation checkReservationByFamilyName(String familyName);
 
 }

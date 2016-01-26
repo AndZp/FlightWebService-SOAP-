@@ -9,22 +9,29 @@ import ua.com.ukrelektro.flight.spr.objects.FlightClass;
 import ua.com.ukrelektro.flight.spr.objects.Place;
 
 public class PlaceDB extends AbstractObjectDB<Place> {
+
+
    
     public final static String TABLE_SPR_PLACE = "spr_place";
     public final static String TABLE_SPR_AIRCRAFT_PLACE = "spr_aircraft_place";
     
+
     private PlaceDB() {
         super(TABLE_SPR_PLACE);
     }
-        
+    
+    
     private static PlaceDB instance;
 
     public static PlaceDB getInstance() {
         if (instance == null) {
             instance = new PlaceDB();
         }
+
         return instance;
-    }       
+    }
+    
+    
 
     public PreparedStatement getStmtByFlightClass(long flightClassId) throws SQLException {
         Connection conn = AviaDB.getInstance().getConnection();
@@ -40,7 +47,7 @@ public class PlaceDB extends AbstractObjectDB<Place> {
         return stmt;
     }
     
-     public PreparedStatement getPlaceStmtBusy(long aircraftId, long flightId) throws SQLException{
+    public PreparedStatement getPlaceStmtBusy(long aircraftId, long flightId) throws SQLException{
         Connection conn = AviaDB.getInstance().getConnection();
         PreparedStatement stmt = conn.prepareStatement("SELECT p.id, p.seat_letter, p.seat_number,p.flight_class_id, " +
             "if ((select r.id from "+ReservationDB.TABLE_RESERVATION+" r where r.flight_id=? and r.place_id=p.id)>1,1,0) as busy " +
@@ -49,12 +56,15 @@ public class PlaceDB extends AbstractObjectDB<Place> {
         stmt.setLong(2, aircraftId);
         return stmt;
     }
+    
+
+
 
     @Override
     public Place fillObject(ResultSet rs) throws SQLException {
         Place place = new Place();
         place.setId(rs.getLong("id"));
-        place.setSeatLetter(rs.getString("seat_letter").charAt(0));
+        place.setSeatLetter(rs.getString("seat_letter"));
         place.setSeatNumber(rs.getInt("seat_number"));
         
         
@@ -70,4 +80,7 @@ public class PlaceDB extends AbstractObjectDB<Place> {
         place.setFlightClass(fc);
         return place;
     }
+
+
+
 }

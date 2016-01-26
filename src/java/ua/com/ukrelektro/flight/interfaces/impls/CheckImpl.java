@@ -1,17 +1,15 @@
 package ua.com.ukrelektro.flight.interfaces.impls;
 
 import java.sql.SQLException;
-import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import ua.com.ukrelektro.flight.database.ReservationDB;
 import ua.com.ukrelektro.flight.interfaces.Check;
 import ua.com.ukrelektro.flight.objects.Reservation;
-import ua.com.ukrelektro.flight.utils.GMTCalendar;
 
-public class CheckImpl implements Check{
+public class CheckImpl implements Check {
 
-    private ReservationDB reservDB = ReservationDB.getInstance();
+     private ReservationDB reservDB = ReservationDB.getInstance();
 
     @Override
     public Reservation checkReservationByCode(String code) {
@@ -25,7 +23,8 @@ public class CheckImpl implements Check{
         return reserv;
     }
     
-     
+    
+
 //    @Override
 //    public Reservation checkReservationByDateReserv(long date) {
 //        Reservation reserv = null;
@@ -54,16 +53,15 @@ public class CheckImpl implements Check{
 //    }
 //    
 //    
-//    @Override
-//      public Reservation checkReservationByFamilyName(String familyName) {
-//        Reservation reserv = null;
-//        try {
-//            reserv = reservDB.executeObject(reservDB.getStmtByFamilyName(familyName));
-//        } catch (SQLException ex) {
-//            Logger.getLogger(CheckImpl.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        
-//        return reserv;
-//    }
-
+    @Override
+      public Reservation checkReservationByFamilyName(String familyName) {
+        Reservation reserv = null;
+        try {
+            reserv = reservDB.executeObject(reservDB.getStmtByFamilyName(familyName));
+        } catch (SQLException ex) {
+            Logger.getLogger(CheckImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return reserv;
+    }
 }

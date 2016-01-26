@@ -10,8 +10,8 @@ import ua.com.ukrelektro.flight.database.AviaDB;
 import ua.com.ukrelektro.flight.database.interfaces.ObjectDB;
 
 public abstract class AbstractObjectDB<T> implements ObjectDB<T> {
-    public static final int INTERVAL = 1;
 
+    public static final int INTERVAL = 1;
     private String tableName;
 
     public AbstractObjectDB(String tableName) {
@@ -47,6 +47,7 @@ public abstract class AbstractObjectDB<T> implements ObjectDB<T> {
 
         return result;
     }
+
 
     @Override
     public ArrayList<T> executeList(PreparedStatement stmt) throws SQLException {
@@ -118,7 +119,7 @@ public abstract class AbstractObjectDB<T> implements ObjectDB<T> {
         c.set(Calendar.SECOND, 0);
         c.set(Calendar.MILLISECOND, 0);
     }
-    
+
     protected boolean getBooleanFromInt(int number) {
         if (number > 0) {
             return true;
