@@ -28,7 +28,7 @@ public class FlightDB extends AbstractObjectDB<Flight> {
 
         return instance;
     }
-    private static final String MIN = " min..";
+    private static final String MIN = " min. ";
     private static final String HOUR = " h.  ";
     private static final String DAY = " d.  ";
 
