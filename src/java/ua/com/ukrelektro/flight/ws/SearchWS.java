@@ -3,6 +3,7 @@ package ua.com.ukrelektro.flight.ws;
 import java.util.ArrayList;
 import java.util.Calendar;
 import javax.jws.WebService;
+import javax.xml.ws.soap.MTOM;
 import ua.com.ukrelektro.flight.interfaces.Buy;
 import ua.com.ukrelektro.flight.interfaces.Check;
 import ua.com.ukrelektro.flight.interfaces.Search;
@@ -16,7 +17,7 @@ import ua.com.ukrelektro.flight.spr.objects.City;
 import ua.com.ukrelektro.flight.spr.objects.Place;
 import ua.com.ukrelektro.flight.utils.GMTCalendar;
 
-
+@MTOM
 @WebService(serviceName = "SearchWS")
 public class SearchWS implements Search, Buy, Check {
 
