@@ -10,6 +10,7 @@ import ua.com.ukrelektro.flight.interfaces.Search;
 import ua.com.ukrelektro.flight.interfaces.impls.BuyImpl;
 import ua.com.ukrelektro.flight.interfaces.impls.CheckImpl;
 import ua.com.ukrelektro.flight.interfaces.impls.SearchImpl;
+import ua.com.ukrelektro.flight.interfaces.sei.FlightSEI;
 import ua.com.ukrelektro.flight.objects.Flight;
 import ua.com.ukrelektro.flight.objects.Passenger;
 import ua.com.ukrelektro.flight.objects.Reservation;
@@ -18,8 +19,10 @@ import ua.com.ukrelektro.flight.spr.objects.Place;
 import ua.com.ukrelektro.flight.utils.GMTCalendar;
 
 @MTOM
-@WebService(serviceName = "SearchWS")
-public class SearchWS implements Search, Buy, Check {
+@WebService(endpointInterface = "ua.com.ukrelektro.flight.interfaces.sei.FlightSEI")
+//@BindingType(value = SOAPBinding.SOAP12HTTP_MTOM_BINDING)
+//@HandlerChain(file = "FlightWS_handler.xml")
+public class FlightWS implements FlightSEI {
 
     private SearchImpl searchImpl = new SearchImpl();
     private BuyImpl buyImpl = new BuyImpl();
@@ -56,10 +59,5 @@ public class SearchWS implements Search, Buy, Check {
     @Override
     public Reservation checkReservationByCode(String code) {
         return checkImpl.checkReservationByCode(code);
-    }
-
-    @Override
-    public Reservation checkReservationByFamilyName(String familyName) {
-        return checkImpl.checkReservationByFamilyName(familyName);
-    }
+    }    
 }

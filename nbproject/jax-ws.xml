@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jax-ws xmlns="http://www.netbeans.org/ns/jax-ws/1">
   <services>
-    <service name="SearchWS">
-      <implementation-class>ua.com.ukrelektro.flight.ws.SearchWS</implementation-class>
+    <service name="FlightWS">
+      <implementation-class>ua.com.ukrelektro.flight.ws.FlightWS</implementation-class>
     </service>
   </services>
   <clients/>
