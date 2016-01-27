@@ -2,7 +2,10 @@ package ua.com.ukrelektro.flight.ws;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.jws.WebService;
+import javax.xml.ws.soap.Addressing;
 import javax.xml.ws.soap.MTOM;
 import ua.com.ukrelektro.flight.interfaces.impls.BuyImpl;
 import ua.com.ukrelektro.flight.interfaces.impls.CheckImpl;
@@ -16,19 +19,29 @@ import ua.com.ukrelektro.flight.spr.objects.Place;
 import ua.com.ukrelektro.flight.utils.GMTCalendar;
 import ua.com.ukrelektro.flight.ws.exceptions.ArgumentException;
 
-@MTOM
+//@MTOM
 @WebService(endpointInterface = "ua.com.ukrelektro.flight.interfaces.sei.FlightSEI")
 //@BindingType(value = SOAPBinding.SOAP12HTTP_MTOM_BINDING)
 //@HandlerChain(file = "FlightWS_handler.xml")
+@Addressing
 public class FlightWS implements FlightSEI {
 
     private SearchImpl searchImpl = new SearchImpl();
     private BuyImpl buyImpl = new BuyImpl();
     private CheckImpl checkImpl = new CheckImpl();
 
+    private void imitateLoading(){
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(FlightWS.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     @Override
     public ArrayList<Flight> searchFlight(Long date, City cityFrom, City cityTo) throws ArgumentException {
-
+        imitateLoading();
+        
         if (date == null || date <= 0) {
             throw new ArgumentException("Date is empty or less then zero");
         }
